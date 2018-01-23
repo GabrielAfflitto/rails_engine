@@ -8,8 +8,7 @@ describe "Invoices" do
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body)
-    
-    expect(items.count).to eq(5)
+    invoices = JSON.parse(response.body)
+    expect(invoices.count).to eq(5)
   end
 end
