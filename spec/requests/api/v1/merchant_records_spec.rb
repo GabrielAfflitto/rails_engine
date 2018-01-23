@@ -27,11 +27,23 @@ describe "Merchants API" do
   it "can find one merchant by it's name" do
     name = create(:merchant).name
 
-    get "/api/v1/merchants/find"
+    get "/api/v1/merchants/find?name=#{name}"
 
     merchant = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(merchant["name"]).to eq(name)
+  end
+
+  it "can find all merchants by parameters" do
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+
+    get "/api/v1/merchants/find_all?id=#{merchant1.id}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant.first["id"]).to eq(merchant1.id)
   end
 end
