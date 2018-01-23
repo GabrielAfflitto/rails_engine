@@ -18,7 +18,39 @@ describe "Invoices" do
     get "/api/v1/invoices/#{invoice_id}"
 
     invoice = JSON.parse(response.body)
+
     expect(response).to be_successful
     expect(invoice["id"]).to eq(invoice_id)
+  end
+
+  it "can find one invoice by status" do
+    invoice_status = create(:invoice).status
+
+    get "/api/v1/invoices/find?status=#{invoice_status}"
+
+    invoice = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoice["status"]).to eq(invoice_status)
+  end
+
+  it "can find all invoices by parameters" do
+    invoice1, invoice2, invoice3 = create_list(:invoice, 3)
+
+    get "/api/v1/invoices/find_all?id=#{invoice1.id}"
+
+  invoice = JSON.parse(response.body)
+
+  expect(response).to be_successful
+  expect(invoice.first["id"]).to eq(invoice1.id)
+  end
+
+  it "can find a random invoice" do
+    create_list(:invoice, 4)
+
+    get "/api/v1/invoices/random"
+
+    invoice = JSON.parse(response.body)
+    expect(response).to be_successful
   end
 end
