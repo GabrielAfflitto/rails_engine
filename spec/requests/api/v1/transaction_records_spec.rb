@@ -55,4 +55,14 @@ describe "Transactions API" do
     expect(transaction.first["credit_card_number"]).to eq(transaction1.credit_card_number)
     expect(transaction.count).to eq(3)
   end
+
+  it "can find a random transaction" do
+    create_list(:transaction, 3)
+
+    get "/api/v1/transactions/random"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_success
+  end
 end
