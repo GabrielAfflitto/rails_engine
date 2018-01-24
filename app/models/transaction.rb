@@ -1,8 +1,8 @@
 class Transaction < ApplicationRecord
   belongs_to :invoice
 
-  scope :successful, -> {where(result: '0')}
-  scope :not_successful, -> {where(result: '1')}
+  scope :successful, -> {where(result: 'success')}
+  scope :not_successful, -> {where(result: 'failed')}
 
   default_scope {order(:id)}
 end
