@@ -11,7 +11,7 @@ describe Merchant, type: :model do
       transaction2 = create(:transaction, invoice: invoice)
       transaction3 = create(:transaction, invoice: invoice)
 
-      expect(merchant.total_revenue).to eq(4050)
+      expect(merchant.total_revenue).to eq({:revenue=>"40.5"})
     end
   end
 
