@@ -56,5 +56,12 @@ describe "Invoice_items" do
     invoice_item = JSON.parse(response.body)
     expect(invoice_item.first["quantity"]).to eq(invoice_item1.quantity)
     expect(invoice_item.count).to eq(5)
+
+    get "/api/v1/invoice_items/find_all?unit_price=#{invoice_item1.unit_price}"
+
+    expect(response).to be_successful
+    invoice_item = JSON.parse(response.body)
+    expect(invoice_item.first["unit_price"]).to eq(invoice_item1.unit_price)
+    expect(invoice_item.count).to eq(5)
   end
 end
