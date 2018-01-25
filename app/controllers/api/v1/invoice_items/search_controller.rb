@@ -2,7 +2,6 @@ class Api::V1::InvoiceItems::SearchController < ApplicationController
 
   def index
     render json: InvoiceItem.where(invoice_item_params)
-    # binding.pry
   end
 
   def show
@@ -12,8 +11,14 @@ class Api::V1::InvoiceItems::SearchController < ApplicationController
   private
 
     def invoice_item_params
-      # params[:unit_price] = params[:unit_price].to_i
-      params.permit(:id, :created_at, :updated_at, :unit_price, :item_id, :invoice_id, :quantity)
+      formatted_invoice_item_params(params.permit(:id, :created_at, :updated_at, :unit_price, :item_id, :invoice_id, :quantity))
+    end
+
+    def formatted_invoice_item_params(params)
+      if params[:unit_price]
+        params[:unit_price] = params[:unit_price].gsub(".", "")
+      end
+      params
     end
 
 end
