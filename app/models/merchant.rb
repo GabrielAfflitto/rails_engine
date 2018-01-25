@@ -1,11 +1,15 @@
 class Merchant < ApplicationRecord
   has_many :invoices
   has_many :items
-  has_many :customers, through: :invoices
   has_many :transactions, through: :invoices
+  has_many :customers, through: :invoices
 
   def total_revenue
     {revenue: (invoices.joins(:invoice_items, :transactions).where("transactions.result = 'success'").sum("invoice_items.quantity*invoice_items.unit_price")/ 100.0).to_s}
+  end
+
+  def favorite_customer
+    customers.joins(invoices: [:transactions]).where("transactions.result = 'success'").group("customers.id").order("count(customers.id) DESC").first
   end
 
   def self.top_merchants_by_revenue(limit = 4)
