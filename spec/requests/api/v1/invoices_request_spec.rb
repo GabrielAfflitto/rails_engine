@@ -53,4 +53,21 @@ describe "Invoices" do
     invoice = JSON.parse(response.body)
     expect(response).to be_successful
   end
+
+  context "Relationship endpoints" do
+    before :each do
+      @invoice = create(:invoice)
+
+      @transaction1 = create(:transaction, invoice: @invoice)
+      @transaction2 = create(:transaction, invoice: @invoice)
+    end
+
+    it "loads a collection of transactions associated with one merchant" do
+      get "/api/v1/invoices/#{@invoice.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(transactions.count).to eq(2)
+    end
+  end
 end
