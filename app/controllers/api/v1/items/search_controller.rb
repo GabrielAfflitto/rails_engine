@@ -11,7 +11,15 @@ class Api::V1::Items::SearchController < ApplicationController
   private
 
     def item_params
-      params.permit(:id, :name, :created_at, :updated_at, :description, :merchant_id, :unit_price)
+      formatted_item_params(params.permit(:id, :name, :created_at, :updated_at, :description, :unit_price, :merchant_id))
     end
+
+    def formatted_item_params(params)
+      if params[:unit_price]
+        params[:unit_price] = params[:unit_price].gsub(".", "")
+      end
+      params
+    end
+
 
 end
