@@ -9,7 +9,10 @@ class Merchant < ApplicationRecord
   end
 
   def favorite_customer
-    customers.joins(invoices: [:transactions]).where("transactions.result = 'success'").group("customers.id").order("count(customers.id) DESC").first
+    customers.joins(invoices: [:transactions])
+    .where("transactions.result = 'success'")
+    .group("customers.id")
+    .order("count(customers.id) DESC").first
   end
 
   def self.top_merchants_by_revenue(limit = 4)
