@@ -64,4 +64,30 @@ describe "Invoice_items" do
     expect(invoice_item.first["unit_price"]).to eq((invoice_item1.unit_price/100.0).to_s)
     expect(invoice_item.count).to eq(5)
   end
+
+  context "Relationship endpoints" do
+    before :each do
+      @invoice = create(:invoice)
+      @item = create(:item)
+      @invoice_item = create(:invoice_item, invoice: @invoice, item: @item)
+    end
+
+    it "loads the invoice associated with one invoice_item" do
+
+      get "/api/v1/invoice_items/#{@invoice_item.id}/invoice"
+
+      invoice = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(invoice["id"]).to eq(@invoice.id)
+    end
+
+    it "loads the invoice associated with one invoice_item" do
+
+      get "/api/v1/invoice_items/#{@invoice_item.id}/item"
+
+      item = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(item["name"]).to eq(@item.name)
+    end
+  end
 end

@@ -53,4 +53,60 @@ describe "Invoices" do
     invoice = JSON.parse(response.body)
     expect(response).to be_successful
   end
+
+  context "Relationship endpoints" do
+    before :each do
+      @customer = create(:customer)
+      @merchant = create(:merchant)
+      @invoice = create(:invoice, customer: @customer, merchant: @merchant)
+      @item1, @item2, @item3 = create_list(:item, 3)
+      @invoice_item1 = create(:invoice_item, invoice: @invoice, item: @item1)
+      @invoice_item2 = create(:invoice_item, invoice: @invoice, item: @item2)
+      @invoice_item3 = create(:invoice_item, invoice: @invoice, item: @item3)
+      @transaction1 = create(:transaction, invoice: @invoice)
+      @transaction2 = create(:transaction, invoice: @invoice)
+
+
+    end
+
+    it "loads a collection of transactions associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(transactions.count).to eq(2)
+    end
+
+    it "loads a collection of invoice_items associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(3)
+    end
+
+    it "loads a collection of items associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/items"
+
+      items = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(items.count).to eq(3)
+    end
+
+    it "loads the customer associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/customer"
+
+      customer = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(customer["first_name"]).to eq(@customer.first_name)
+    end
+
+    it "loads the merchant associated with the invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(merchant["name"]).to eq(@merchant.name)
+    end
+  end
 end

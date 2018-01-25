@@ -50,4 +50,33 @@ describe "Items" do
     invoice = JSON.parse(response.body)
     expect(response).to be_successful
   end
+
+  context "Relationship endpoints" do
+    before :each do
+      @merchant = create(:merchant)
+      @invoice = create(:invoice)
+      @item = create(:item, merchant: @merchant)
+      @invoice_item = create(:invoice_item, item: @item)
+      @invoice_item2 = create(:invoice_item, item: @item)
+      @invoice_item3 = create(:invoice_item, item: @item)
+    end
+
+    it "loads collection of invoice_items associated with one item" do
+
+      get "/api/v1/items/#{@item.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(3)
+    end
+
+    it "loads the merchant associated with one item" do
+
+      get "/api/v1/items/#{@item.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(merchant["name"]).to eq(@merchant.name)
+      end
+  end
 end
