@@ -56,7 +56,8 @@ describe "Invoices" do
 
   context "Relationship endpoints" do
     before :each do
-      @invoice = create(:invoice)
+      @customer = create(:customer)
+      @invoice = create(:invoice, customer: @customer)
       @item1, @item2, @item3 = create_list(:item, 3)
       @invoice_item1 = create(:invoice_item, invoice: @invoice, item: @item1)
       @invoice_item2 = create(:invoice_item, invoice: @invoice, item: @item2)
@@ -67,7 +68,7 @@ describe "Invoices" do
 
     end
 
-    it "loads a collection of transactions associated with one merchant" do
+    it "loads a collection of transactions associated with one invoice" do
       get "/api/v1/invoices/#{@invoice.id}/transactions"
 
       transactions = JSON.parse(response.body)
@@ -75,12 +76,28 @@ describe "Invoices" do
       expect(transactions.count).to eq(2)
     end
 
-    it "loads a collection of invoice_items associated with one merchant" do
+    it "loads a collection of invoice_items associated with one invoice" do
       get "/api/v1/invoices/#{@invoice.id}/invoice_items"
 
       invoice_items = JSON.parse(response.body)
       expect(response).to be_success
       expect(invoice_items.count).to eq(3)
+    end
+
+    it "loads a collection of items associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/items"
+
+      items = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(items.count).to eq(3)
+    end
+
+    it "loads the customer associated with one invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/customer"
+
+      customer = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(customer["first_name"]).to eq(@customer.first_name)
     end
   end
 end
