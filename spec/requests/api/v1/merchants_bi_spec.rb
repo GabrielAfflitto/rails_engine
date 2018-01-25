@@ -59,4 +59,28 @@ describe "Business Intelligence- merchants" do
     expect(Merchant.top_merchants_by_revenue(2).last).to eq(merchant2)
     expect(Merchant.top_merchants_by_revenue(2).last).to_not eq(merchant3)
   end
+
+  it "returns top x merchants ranked by total items sold" do
+    merchant = create(:merchant)
+    merchant2 = create(:merchant)
+    merchant3 = create(:merchant)
+    invoice = create(:invoice, merchant: merchant)
+    invoice2 = create(:invoice, merchant: merchant2)
+    invoice3 = create(:invoice, merchant: merchant)
+    transaction1 = create(:transaction, invoice: invoice)
+    transaction2 = create(:transaction, invoice: invoice2)
+    transaction3 = create(:transaction, invoice: invoice3)
+    invoice_item1 = create(:invoice_item, invoice: invoice)
+    invoice_item2 = create(:invoice_item, invoice: invoice2)
+    invoice_item3 = create(:invoice_item, invoice: invoice2)
+    invoice_item4 = create(:invoice_item, invoice: invoice3)
+
+    get "/api/v1/merchants/most_items?quantity=2"
+
+    merch = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(Merchant.top_merchants_by_items_sold(2).first).to eq(merchant)
+    expect(Merchant.top_merchants_by_items_sold(2).last).to eq(merchant2)
+    expect(Merchant.top_merchants_by_items_sold(2).last).to_not eq(merchant3)
+  end
 end
