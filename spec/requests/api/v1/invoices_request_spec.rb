@@ -57,7 +57,8 @@ describe "Invoices" do
   context "Relationship endpoints" do
     before :each do
       @customer = create(:customer)
-      @invoice = create(:invoice, customer: @customer)
+      @merchant = create(:merchant)
+      @invoice = create(:invoice, customer: @customer, merchant: @merchant)
       @item1, @item2, @item3 = create_list(:item, 3)
       @invoice_item1 = create(:invoice_item, invoice: @invoice, item: @item1)
       @invoice_item2 = create(:invoice_item, invoice: @invoice, item: @item2)
@@ -98,6 +99,14 @@ describe "Invoices" do
       customer = JSON.parse(response.body)
       expect(response).to be_success
       expect(customer["first_name"]).to eq(@customer.first_name)
+    end
+
+    it "loads the merchant associated with the invoice" do
+      get "/api/v1/invoices/#{@invoice.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(merchant["name"]).to eq(@merchant.name)
     end
   end
 end
