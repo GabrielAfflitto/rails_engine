@@ -8,6 +8,14 @@ class Merchant < ApplicationRecord
     {revenue: (invoices.joins(:invoice_items, :transactions).where("transactions.result = 'success'").sum("invoice_items.quantity*invoice_items.unit_price")/ 100.0).to_s}
   end
 
+  def total_revenue_by_date(date)
+    selected_date = DateTime.parse(date)
+    {revenue: (invoices.joins(:invoice_items, :transactions)
+      .where("transactions.result = 'success'")
+      .where("invoices.created_at" => selected_date.beginning_of_day..selected_date.end_of_day)
+      .sum("invoice_items.quantity*invoice_items.unit_price")/ 100.0).to_s}
+  end
+
   def favorite_customer
     customers.joins(invoices: [:transactions])
     .where("transactions.result = 'success'")
