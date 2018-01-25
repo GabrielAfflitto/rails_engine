@@ -18,23 +18,23 @@ describe "Business Intelligence- merchants" do
     expect(merchant.total_revenue).to eq({revenue: "40.5"})
   end
 
-  # it "returns customer with highest number of successful transactions" do
-  #   merchant = create(:merchant)
-  #   customer1,customer2 = create_list(:customer, 2)
-  #   invoice1,invoice2,invoice3 = create_list(:invoice, 3, customer: customer1, merchant: merchant)
-  #   invoice4,invoice5 = create_list(:invoice, 2, customer: customer2, merchant: merchant)
-  #   create_list(:transaction, 2, result: "failed", invoice: invoice1)
-  #   create_list(:transaction, 2, result: "failed", invoice: invoice2)
-  #   create(:transaction, result: "success", invoice: invoice3)
-  #   create(:transaction, result: "success", invoice: invoice4)
-  #   create(:transaction, result: "success", invoice: invoice5)
-  #
-  #   get "/api/v1/merchants/#{merchant.id}/favorite_customer"
-  #   customer = JSON.parse(response.body)
-  #
-  #   expect(response).to be_success
-  #   expect(customer["id"]).to eq(customer2.id.to_s)
-  # end
+  it "returns customer with highest number of successful transactions" do
+    merchant = create(:merchant)
+    customer1,customer2 = create_list(:customer, 2)
+    invoice1,invoice2,invoice3 = create_list(:invoice, 3, customer: customer1, merchant: merchant)
+    invoice4,invoice5 = create_list(:invoice, 2, customer: customer2, merchant: merchant)
+    create_list(:transaction, 2, result: "failed", invoice: invoice1)
+    create_list(:transaction, 2, result: "failed", invoice: invoice2)
+    create(:transaction, result: "success", invoice: invoice3)
+    create(:transaction, result: "success", invoice: invoice4)
+    create(:transaction, result: "success", invoice: invoice5)
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+    customer = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant.favorite_customer).to eq(customer2)
+  end
 
   it "returns top x merchants ranked by total revenue" do
     merchant = create(:merchant)
