@@ -57,9 +57,14 @@ describe "Invoices" do
   context "Relationship endpoints" do
     before :each do
       @invoice = create(:invoice)
-
+      @item1, @item2, @item3 = create_list(:item, 3)
+      @invoice_item1 = create(:invoice_item, invoice: @invoice, item: @item1)
+      @invoice_item2 = create(:invoice_item, invoice: @invoice, item: @item2)
+      @invoice_item3 = create(:invoice_item, invoice: @invoice, item: @item3)
       @transaction1 = create(:transaction, invoice: @invoice)
       @transaction2 = create(:transaction, invoice: @invoice)
+
+
     end
 
     it "loads a collection of transactions associated with one merchant" do
@@ -68,6 +73,14 @@ describe "Invoices" do
       transactions = JSON.parse(response.body)
       expect(response).to be_success
       expect(transactions.count).to eq(2)
+    end
+
+    it "loads a collection of invoice_items associated with one merchant" do
+      get "/api/v1/invoices/#{@invoice.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(3)
     end
   end
 end
