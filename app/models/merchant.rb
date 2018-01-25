@@ -15,8 +15,8 @@ class Merchant < ApplicationRecord
     .order("revenue DESC").limit(limit)
   end
 
-  def self.top_merchants_by_items_sold
-    select
-  end
+  # def self.top_merchants_by_items_sold
+  #   select
+  # end
 
 end
