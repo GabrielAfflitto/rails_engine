@@ -60,21 +60,37 @@ describe "Customers API" do
   end
 
   context "Relationship endpoints" do
-    it "loads a collection of invoices associated with one customer" do
-      customer1, customer2 = create_list(:customer, 2)
-      invoice1 = create(:invoice, customer: customer1)
-      invoice2 = create(:invoice, customer: customer1)
-      invoice3 = create(:invoice, customer: customer1)
-      invoice4 = create(:invoice, customer: customer2)
+    before :each do
+      @customer1, @customer2 = create_list(:customer, 2)
+      @invoice1 = create(:invoice, customer: @customer1)
+      @invoice2 = create(:invoice, customer: @customer1)
+      @invoice3 = create(:invoice, customer: @customer1)
+      @invoice4 = create(:invoice, customer: @customer2)
+      @transaction1 = create(:transaction, invoice: @invoice1)
+      @transaction2 = create(:transaction, invoice: @invoice1)
+      @transaction3 = create(:transaction, invoice: @invoice3)
+      @transaction4 = create(:transaction, invoice: @invoice2)
+    end
 
-      get "/api/v1/customers/#{customer1.id}/invoices"
+    it "loads a collection of invoices associated with one customer" do
+
+      get "/api/v1/customers/#{@customer1.id}/invoices"
 
       invoices = JSON.parse(response.body)
       expect(response).to be_successful
-      expect(customer1.invoices.count).to eq(3)
-      expect(customer1.invoices.first.id).to eq(invoice1.id)
-      expect(customer1.invoices[1].id).to eq(invoice2.id)
-      expect(customer1.invoices.last.id).to eq(invoice3.id)
+      expect(@customer1.invoices.count).to eq(3)
+      expect(@customer1.invoices.first.id).to eq(@invoice1.id)
+      expect(@customer1.invoices[1].id).to eq(@invoice2.id)
+      expect(@customer1.invoices.last.id).to eq(@invoice3.id)
+    end
+
+    it "loads a collection of transactions associated with one customer" do
+
+      get "/api/v1/customers/#{@customer1.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(@customer1.transactions.count).to eq(4)
     end
   end
 end
