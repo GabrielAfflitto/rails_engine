@@ -31,6 +31,17 @@ describe "Transactions API" do
       expect(transaction["id"]).to eq(id)
     end
 
+    it "can find one transaction by it's id" do
+      id = create(:transaction ).id
+
+      get "/api/v1/transactions/find?id=#{id}"
+
+      transaction = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(transaction["id"]).to eq(id)
+    end
+
     it "can find one transaction by it's credit_card_number" do
       card = create(:transaction ).credit_card_number
 
@@ -42,7 +53,7 @@ describe "Transactions API" do
       expect(transaction["credit_card_number"]).to eq(card)
     end
 
-    it "can find all transactions by parameters" do
+    it "can find all transactions by credit card number" do
       transaction1 , transaction2, transaction3 = create_list(:transaction, 3)
 
       get "/api/v1/transactions/find_all?credit_card_number=#{transaction1.credit_card_number}"
@@ -51,6 +62,30 @@ describe "Transactions API" do
 
       expect(response).to be_success
       expect(transaction.first["credit_card_number"]).to eq(transaction1.credit_card_number)
+      expect(transaction.count).to eq(3)
+    end
+
+    it "can find all transactions by id" do
+      transaction1 , transaction2, transaction3 = create_list(:transaction, 3)
+
+      get "/api/v1/transactions/find_all?id=#{transaction1.id}"
+
+      transaction = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(transaction.first["id"]).to eq(transaction1.id)
+      expect(transaction.count).to eq(1)
+    end
+
+    it "can find all transactions by result" do
+      transaction1, transaction2, transaction3 = create_list(:transaction, 3)
+
+      get "/api/v1/transactions/find_all?result=#{transaction1.result}"
+
+      transaction = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(transaction.first["result"]).to eq(transaction1.result)
       expect(transaction.count).to eq(3)
     end
 

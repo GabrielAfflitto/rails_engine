@@ -36,7 +36,18 @@ describe "Customers API" do
       expect(customer["first_name"]).to eq(name)
     end
 
-    it "can find all customers by parameters" do
+    it "can find one customer by it's id" do
+      id = create(:customer).id
+
+      get "/api/v1/customers/find?id=#{id}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(customer["id"]).to eq(id)
+    end
+
+    it "can find all customers by id" do
       merchant1 = create(:customer)
       merchant2 = create(:customer)
 
@@ -46,6 +57,36 @@ describe "Customers API" do
 
       expect(response).to be_success
       expect(customer.first["id"]).to eq(merchant1.id)
+      expect(customer.count).to eq(1)
+
+    end
+
+    it "can find all customers by first_name" do
+      merchant1 = create(:customer)
+      merchant2 = create(:customer)
+
+      get "/api/v1/customers/find_all?first_name=#{merchant1.first_name}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(customer.first["first_name"]).to eq(merchant1.first_name)
+      expect(customer.last["first_name"]).to eq(merchant2.first_name)
+      expect(customer.count).to eq(2)
+    end
+
+    it "can find all customers by last_name" do
+      merchant1 = create(:customer)
+      merchant2 = create(:customer)
+
+      get "/api/v1/customers/find_all?last_name=#{merchant1.last_name}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(customer.first["last_name"]).to eq(merchant1.last_name)
+      expect(customer.last["last_name"]).to eq(merchant2.last_name)
+      expect(customer.count).to eq(2)
     end
 
     it "can find a random merchant" do
