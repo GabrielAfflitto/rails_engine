@@ -47,7 +47,7 @@ This app is tested locally with RSpec. To run the test suite from your rails_eng
 rspec
 ```
 
-1. For further testing please clone the Rales Engine Spec Harness [here](git clone https://github.com/turingschool/rales_engine_spec_harness.git). Be sure you clone this into the same directory that holds your Rails Engine project:
+1. For further testing please clone the Rales Engine Spec Harness [here](https://github.com/turingschool/rales_engine_spec_harness.git). Be sure you clone this into the same directory that holds your Rails Engine project:
 ```
 git clone https://github.com/turingschool/rales_engine_spec_harness.git
 ```
