@@ -32,6 +32,16 @@ describe "Items" do
     expect(item["name"]).to eq(item_name)
   end
 
+  it "can find one item by id" do
+    item_id = create(:item).id
+
+    get "/api/v1/items/find?id=#{item_id}"
+
+    expect(response).to be_successful
+    item = JSON.parse(response.body)
+    expect(item["id"]).to eq(item_id)
+  end
+
   it "can find all items by parameters" do
     item1, item2, item3 = create_list(:item, 3)
 
@@ -40,6 +50,30 @@ describe "Items" do
     expect(response).to be_successful
     item = JSON.parse(response.body)
     expect(item.first["id"]).to eq(item1.id)
+  end
+
+  it "can find all items by name" do
+    item1, item2, item3 = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?name =#{item1.name}"
+
+    expect(response).to be_successful
+    item = JSON.parse(response.body)
+    expect(item.first["name"]).to eq(item1.name)
+    expect(item.last["name"]).to eq(item2.name)
+    expect(item.count).to eq(3)
+  end
+
+  it "can find all items by unit price" do
+    item1, item2, item3 = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?unit_price =#{item1.unit_price}"
+
+    expect(response).to be_successful
+    item = JSON.parse(response.body)
+    expect(item.first["unit_price"]).to eq("1.0")
+    expect(item.last["unit_price"]).to eq("1.0")
+    expect(item.count).to eq(3)
   end
 
   it "can find a random item" do
