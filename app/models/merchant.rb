@@ -35,4 +35,14 @@ class Merchant < ApplicationRecord
     select("merchants.*, sum(invoice_items.quantity) AS total").joins(invoices:[:invoice_items, :transactions]).where("transactions.result = 'success'").group(:id).order("total DESC").limit(limit)
   end
 
+  def self.all_revenue_for_date(date)
+    selected_date = DateTime.parse(date)
+
+    (Invoice.joins(:invoice_items, :transactions)
+      .where("transactions.result = 'success'")
+      .where("invoices.created_at" => selected_date.beginning_of_day..selected_date.end_of_day)
+      .sum("invoice_items.quantity*invoice_items.unit_price")/ 100.0).to_s
+      #refactored method
+  end
+
 end
