@@ -36,7 +36,18 @@ describe "Merchants API" do
       expect(merchant["name"]).to eq(name)
     end
 
-    it "can find all merchants by parameters" do
+    it "can find one merchant by it's id" do
+      id = create(:merchant).id
+
+      get "/api/v1/merchants/find?id=#{id}"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(merchant["id"]).to eq(id)
+    end
+
+    it "can find all merchants by id" do
       merchant1 = create(:merchant)
       merchant2 = create(:merchant)
 
@@ -46,6 +57,20 @@ describe "Merchants API" do
 
       expect(response).to be_success
       expect(merchant.first["id"]).to eq(merchant1.id)
+    end
+
+    it "can find all merchants by name" do
+      merchant1 = create(:merchant)
+      merchant2 = create(:merchant)
+
+      get "/api/v1/merchants/find_all?name=#{merchant1.name}"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(merchant.count).to eq(2)
+      expect(merchant.first["name"]).to eq(merchant1.name)
+      expect(merchant.last["name"]).to eq(merchant2.name)
     end
 
     it "can find a random merchant" do
