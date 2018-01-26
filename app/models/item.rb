@@ -13,4 +13,8 @@ class Item < ApplicationRecord
     unscoped.select("items.*, sum(invoice_items.quantity) AS total").joins(invoices:[ :transactions]).where("transactions.result = 'success'").group(:id).order("total DESC").limit(limit)
   end
 
+  def best_day
+    invoices.joins(:invoice_items, :transactions).where("transactions.result = 'success'").group(:id).order("sum(invoice_items.quantity*invoice_items.unit_price) DESC, invoices.created_at DESC").first.created_at
+  end
+
 end
