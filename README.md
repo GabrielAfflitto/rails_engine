@@ -23,7 +23,7 @@ rails db:create db:migrate
 
 5. You are ready to import the data from the CSV files which are included in this repository (Please note, this could take a few minutes to load all of the data):
 ```
-bundle exec rake import_all
+rake import_all
 ```
 
 6. To check that your data was successfully loaded, enter into rails console in your terminal ```rails c``` and run the following commands:
