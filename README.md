@@ -37,6 +37,9 @@ Transaction.all
 ```
 With each of the above commands you should see an ActiveRecord relation that includes an array of objects.
 
+## Schema
+![Schema](Schema.png)
+
 ## Testing
 
 This app is tested locally with RSpec. To run the test suite from your rails_engine directory:
