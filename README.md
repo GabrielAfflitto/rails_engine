@@ -1,6 +1,6 @@
 # Rails Engine
 
-Rails Engine API is a an app built with Rails 5.1.4 and ActiveRecord to analyze Sales data. Endpoints return JSON objects for Merchants, Customers, Items, Invoices, Invoice Items and Transactions along with business intelligence analytics.
+Rails Engine API is a an app built with Rails 5.1.4 and ActiveRecord to analyze sales data. This app uses sample Sales Engine data from here(https://github.com/turingschool-examples/sales_engine/tree/master/data). Please note, this data is already included in this Repository. Endpoints return JSON objects for Merchants, Customers, Items, Invoices, Invoice Items and Transactions along with business intelligence analytics.
 
 ## Setup
 
