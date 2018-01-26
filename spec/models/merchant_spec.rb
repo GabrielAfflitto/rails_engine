@@ -15,4 +15,11 @@ describe Merchant, type: :model do
     end
   end
 
+  describe "Associations" do
+    it {is_expected.to respond_to(:invoices)}
+    it {is_expected.to respond_to(:items)}
+    it {is_expected.to respond_to(:transactions)}
+    it {is_expected.to respond_to(:customers)}
+  end
+
 end
