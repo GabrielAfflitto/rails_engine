@@ -6,7 +6,7 @@ namespace :import do
     file = "db/customers.csv"
       CSV.foreach(file, headers: true) do |row|
         Customer.create!(row.to_hash)
-      end
+      end  
   end
 
   desc 'Import invoice items from csv file'

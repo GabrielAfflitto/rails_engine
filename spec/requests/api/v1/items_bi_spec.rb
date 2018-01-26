@@ -21,4 +21,20 @@ describe "Business Intelligence- Items" do
     expect(items.count).to eq(2)
     expect(Item.top_item_by_number_sold(2).first).to eq(item2)
   end
+
+  it "returns the best day for the sale of the item" do
+    invoice1 = create(:invoice)
+
+
+    item1= create(:item)
+    invoice_item1 = create(:invoice_item, item: item1, invoice: invoice1)
+    transaction = create(:transaction, invoice: invoice1)
+
+    get "/api/v1/items/#{item1.id}/best_day"
+
+    best_day = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(item1.best_day).to eq(invoice1.created_at)
+  end
 end
